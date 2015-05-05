@@ -19,7 +19,8 @@ func main(){
 	defer fp.Close()
 
 	reader := csv.NewReader(fp)
-	reader.Comma = '\t'
+// 	// TSV
+// 	reader.Comma = '\t'
 	reader.LazyQuotes = true
 	
 	for {
