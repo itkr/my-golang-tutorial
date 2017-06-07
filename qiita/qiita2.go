@@ -240,7 +240,7 @@ func main() {
 
 	oldMembers, err := getMembersFromS3(yesterday)
 	if err != nil {
-		oldMembers = []Member{}
+		fmt.Println(err.Error())
 	}
 
 	diffMembers := comparisonMembers(oldMembers, newMembers)
