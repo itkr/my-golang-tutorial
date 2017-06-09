@@ -1,0 +1,4 @@
+gom 'github.com/PuerkitoBio/goquery', :commit => 'ed7d758e9a34ba1f55e8084e0d731448b46921a8'
+gom 'github.com/andybalholm/cascadia', :commit => '349dd0209470eabd9514242c688c403c0926d266'
+gom 'github.com/aws/aws-sdk-go', :commit => '33a65fdad4220416fbd92fa2982616d0f32f7505'
+gom 'golang.org/x/net', :commit => 'd379faa25cbdc04d653984913a2ceb43b0bc46d7'
