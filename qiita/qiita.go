@@ -10,18 +10,18 @@ import (
 )
 
 type Item struct {
-	Rendered_body string `json:"rendered_body"`
-	Body          string `json:"body"`
-	Coediting     bool   `json:"coediting"`
-	Created_at    string `json:"created_at"`
-	Group         string `json:"group"`
-	Id            string `json:"id"`
-	Private       bool   `json:"private"`
-	Tags          []Tag  `json:"tag"`
-	Title         string `json:"title"`
-	Updated_at    string `json:"updated_at"`
-	Url           string `json:"url"`
-	User          User   `json:"user"`
+	RenderedBody string `json:"rendered_body"`
+	Body         string `json:"body"`
+	Coediting    bool   `json:"coediting"`
+	CreatedAt    string `json:"created_at"`
+	Group        string `json:"group"`
+	Id           string `json:"id"`
+	Private      bool   `json:"private"`
+	Tags         []Tag  `json:"tag"`
+	Title        string `json:"title"`
+	UpdatedAt    string `json:"updated_at"`
+	Url          string `json:"url"`
+	User         User   `json:"user"`
 }
 
 type Tag struct {
@@ -30,21 +30,21 @@ type Tag struct {
 }
 
 type User struct {
-	Description         string `json:"description"`
-	Facebook_id         string `json:"facebook_id"`
-	Followees_count     int    `json:"followees_count"`
-	Followers_count     int    `json:"followers_count"`
-	Github_login_name   string `json:"github_login_name"`
-	Id                  string `json:"id"`
-	Items_count         int    `json:"items_count"`
-	Linkedin_id         string `json:"linkedin_id"`
-	Location            string `json:"location"`
-	Name                string `json:"name"`
-	Organization        string `json:"organization"`
-	Permanent_id        int    `json:"permanent_id"`
-	Profile_image_url   string `json:"profile_image_url"`
-	Twitter_screen_name string `json:"twitter_screen_name"`
-	Website_url         string `json:"website_url"`
+	Description       string `json:"description"`
+	FacebookId        string `json:"facebook_id"`
+	FolloweesCount    int    `json:"followees_count"`
+	FollowersCount    int    `json:"followers_count"`
+	GithubLoginName   string `json:"github_login_name"`
+	Id                string `json:"id"`
+	ItemsCount        int    `json:"items_count"`
+	LinkedinId        string `json:"linkedin_id"`
+	Location          string `json:"location"`
+	Name              string `json:"name"`
+	Organization      string `json:"organization"`
+	PermanentId       int    `json:"permanent_id"`
+	ProfileImageUrl   string `json:"profile_image_url"`
+	TwitterScreenName string `json:"twitter_screen_name"`
+	WebsiteUrl        string `json:"website_url"`
 }
 
 func getItems(userId string, items *[]Item) error {
