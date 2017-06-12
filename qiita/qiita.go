@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 	"github.com/PuerkitoBio/goquery"
 	"io/ioutil"
 	"net/http"
@@ -60,6 +61,11 @@ type User struct {
 	ProfileImageUrl   string `json:"profile_image_url"`
 	TwitterScreenName string `json:"twitter_screen_name"`
 	WebsiteUrl        string `json:"website_url"`
+}
+
+func strptime(timeStr string) (time.Time, error) {
+	layout := "2006-01-02T15:04:05-07:00"
+	return time.Parse(layout, timeStr)
 }
 
 func getItems(userId string, items *[]Item) error {
