@@ -7,7 +7,22 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"strings"
 )
+
+// TODO: 2017-06-12 重複している記述を一箇所にまとめる
+
+const organizationID = "gumi"
+
+type Member struct {
+	Name                   string
+	Contributions          int
+	Posts                  int
+	YesterdayContributions int
+	YesterdayPosts         int
+	DiffPosts              int
+	DiffContributions      int
+}
 
 type Item struct {
 	RenderedBody string `json:"rendered_body"`
@@ -72,50 +87,78 @@ func getItems(userId string, items *[]Item) error {
 	return nil
 }
 
-func getIdList(userId string) ([]string, error) {
-	var items []Item
-	err := getItems(userId, &items)
-	if err != nil {
-		return nil, err
-	}
-	urlList := make([]string, len(items))
-	for i, item := range items {
-		urlList[i] = item.Id
-	}
-	return urlList, nil
-}
-
-func getLikeCount(userId string, itemId string) (int, error) {
-	url := fmt.Sprintf("http://qiita.com/%s/items/%s", userId, itemId)
+func getMembersInAPage(organizationID string, page int) ([]Member, error) {
+	var members []Member
+	url := fmt.Sprintf("https://qiita.com/organizations/%s/members?page=%d", organizationID, page)
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
-		return 0, err
+		return members, err
 	}
-	count := doc.Find(".js-likecount").Text()
-	return strconv.Atoi(count)
+	doc.Find(".organizationMemberList_memberProfile").Each(func(i int, s *goquery.Selection) {
+		// name
+		name := s.Find(".organizationMemberList_userName").Text()
+		// contoributions
+		contributions := s.Find(".organizationMemberList_memberStats").Last().Text()
+		countStr := strings.Split(contributions, " ")[0]
+		count, err := strconv.Atoi(countStr)
+		if err != nil {
+			count = 0
+		}
+		// posts
+		posts := s.Find(".organizationMemberList_memberStats").First().Text()
+		postStr := strings.Split(posts, " ")[0]
+		post, err := strconv.Atoi(postStr)
+		if err != nil {
+			count = 0
+		}
+		// struct
+		members = append(members, Member{
+			Name:          name,
+			Contributions: count,
+			Posts:         post,
+		})
+	})
+	return members, nil
 }
 
-func getSumLikeCount(userId string) (int, error) {
-	var count int
-	urlList, err := getIdList(userId)
-	if err != nil {
-		return 0, err
-	}
-	for _, url := range urlList {
-		like, err := getLikeCount(userId, url)
+func getMembers() ([]Member, error) {
+	var allMembers []Member
+	var maxMemberCountPerPage int
+	for page := 1; ; page++ {
+		membersInAPage, err := getMembersInAPage(organizationID, page)
 		if err != nil {
-			return count, err
+			return allMembers, err
 		}
-		count += like
+		if page == 1 {
+			maxMemberCountPerPage = len(membersInAPage)
+		}
+		if len(membersInAPage) == 0 {
+			break
+		}
+		allMembers = append(allMembers, membersInAPage...)
+		if len(membersInAPage) < maxMemberCountPerPage {
+			break
+		}
 	}
-	return count, nil
+	return allMembers, nil
 }
 
 func main() {
-	count, err := getSumLikeCount("itkr")
+	var items []Item
+	members, err := getMembers()
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	fmt.Println(count)
+	for _, member := range members {
+		err := getItems(member.Name, &items)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		fmt.Println(member.Name)
+		fmt.Println(items[0].Title)
+		fmt.Println(items[0].CreatedAt)
+		fmt.Println("======")
+	}
 }
