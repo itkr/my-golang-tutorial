@@ -21,7 +21,7 @@ const organizationID = "gumi"
 const region = "ap-northeast-1"
 const bucket = "gumi-qiita"
 const tmpFilePath = "/tmp/qiita.csv"
-const fileFormat = "qiita-2006-01-02.csv"
+const fileFormat = "organizations/gumi/2006/01/qiita-2016-01-02.csv"
 
 // Member : メンバーのデータを扱う
 type Member struct {
